@@ -3,7 +3,7 @@ import json
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from users.models import Account, Organizer, Participant
+from users.models import Account
 
 
 class AccountTests(APITestCase):
@@ -19,7 +19,6 @@ class AccountTests(APITestCase):
             "password_confirmation": "abcd123123",
             "first_name": "FirstName",
             "last_name": "LastName",
-            "is_organizer": "True"
         }
         response = self.client.post(url, data, format='json')
 
@@ -32,13 +31,14 @@ class AccountTests(APITestCase):
             "password_confirmation": "abcd123123",
             "first_name": "FirstName",
             "last_name": "LastName",
+            "organization_name": "Org",
         }
         response = self.client.post(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Account.objects.count(), 2)
-        self.assertEqual(Organizer.objects.count(), 1)
-        self.assertEqual(Participant.objects.count(), 1)
+        self.assertEqual(Account.objects.get(id=1).organization_name, "FirstName LastName")
+        self.assertEqual(Account.objects.get(id=2).organization_name, "Org")
 
         response = self.client.post(url, {}, format='json')
         content = json.loads(response.content)

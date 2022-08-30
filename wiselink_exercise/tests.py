@@ -56,7 +56,7 @@ class WiselinkExerciseTests(APITestCase):
         data = {
             "title": "Super Event",
             "short_description": "This is a super short description",
-            "event_datetime": "2025-3-19T23:48"
+            "date_time": "2025-3-19T23:48"
         }
         response = self.client.post(url, data, format='json')
 
@@ -64,7 +64,7 @@ class WiselinkExerciseTests(APITestCase):
 
         data = {
             "title": "Super Super Event",
-            "event_datetime": "2010-3-19T23:48"
+            "date_time": "2010-3-19T23:48"
         }
         response = self.client.post(url, data, format='json')
 
@@ -82,7 +82,7 @@ class WiselinkExerciseTests(APITestCase):
     def test_retrieve_event(self):
         account = Account.objects.create_user('user', 'user')
         self.client.force_authenticate(account)
-        Event.objects.create(title="Super Event", event_datetime="2025-3-19T23:48", status="active")
+        Event.objects.create(title="Super Event", date_time="2025-3-19T23:48", status="active")
 
         url = '/events/2/'
         response = self.client.get(url)
@@ -92,7 +92,7 @@ class WiselinkExerciseTests(APITestCase):
     def test_retrieve_event_forbidden(self):
         account = Account.objects.create_user('user', 'user')
         self.client.force_authenticate(account)
-        Event.objects.create(title="Forbidden Event", event_datetime="2025-3-19T23:48")
+        Event.objects.create(title="Forbidden Event", date_time="2025-3-19T23:48")
 
         url = '/events/3/'
         response = self.client.get(url)

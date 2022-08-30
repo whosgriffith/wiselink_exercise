@@ -22,6 +22,8 @@ class WiselinkExerciseTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
+    def test_create_account_with_organization_name(self):
+        url = '/users/signup/'
         data = {
             "username": "User1",
             "email": "user1@email.com",
@@ -34,10 +36,11 @@ class WiselinkExerciseTests(APITestCase):
         response = self.client.post(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Account.objects.count(), 2)
-        self.assertEqual(Account.objects.get(id=1).organization_name, "FirstName LastName")
+        self.assertEqual(Account.objects.count(), 1)
         self.assertEqual(Account.objects.get(id=2).organization_name, "Org")
 
+    def test_create_account_without_required_fields(self):
+        url = '/users/signup/'
         response = self.client.post(url, {}, format='json')
         content = json.loads(response.content)
 
@@ -84,7 +87,7 @@ class WiselinkExerciseTests(APITestCase):
         self.client.force_authenticate(account)
         Event.objects.create(title="Super Event", date_time="2025-3-19T23:48", status="active")
 
-        url = '/events/2/'
+        url = '/events/3/'
         response = self.client.get(url)
         content = json.loads(response.content)
         self.assertEqual(content['event']['title'], "Super Event")
@@ -98,3 +101,13 @@ class WiselinkExerciseTests(APITestCase):
         response = self.client.get(url)
         content = json.loads(response.content)
         self.assertEqual(content['detail'], "Not found.")
+
+    def test_event_inscription(self):
+        account = Account.objects.create_user('user', 'user')
+        self.client.force_authenticate(account)
+        Event.objects.create(title="Super Event", date_time="2025-3-19T23:48", status='active')
+
+        url = '/events/2/register/'
+        response = self.client.get(url)
+        content = json.loads(response.content)
+        self.assertEqual(content['detail'], "Inscription completed for Super Event")

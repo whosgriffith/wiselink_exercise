@@ -17,6 +17,10 @@
 
 3- While located on the root folder run:
 
+(Create virtualenv if needed)
+
+`pip install -r requirements.txt`
+
 `python manage.py makemigrations`
 
 `python manage.py migrate`

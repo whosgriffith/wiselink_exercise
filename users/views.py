@@ -34,7 +34,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
             permissions = [AllowAny]
         elif self.action in ['list']:
             permissions = [IsAdminUser]
-        elif self.action in ['retrieve', 'update', 'partial_update', 'destroy', 'u', 'p']:
+        elif self.action in ['retrieve', 'update', 'partial_update', 'destroy']:
             permissions = [IsAuthenticated, IsAccountOwner]
         else:
             permissions = [IsAuthenticated]
